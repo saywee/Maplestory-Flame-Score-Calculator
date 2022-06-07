@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maplestory Flame Calculator</title>
+    <link rel="stylesheet" href="MFC_style.css">
+    <style>
+        input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+    </style>
+</head>
+<body>
+
+    <div class="left">
+        <p>
+            <h5>There are no known flame score calculation for Demon Avengers.<br> 
+                A table to find out what tier a HP flame is can be found 
+                <a href="https://strategywiki.org/wiki/MapleStory/Bonus_Stats#HP_increase">here</a>
+            </h5>
+        </p>
+        <div id="job_section">
+            <select id="jobs" onchange="selected()">
+                <option value=" "></option>
+            </select>
+        </div>
+        <div id="stat_section">
+            <div id="main_stat">
+                <h3>Main Stat: </h3><h3 id="main" class="type"></h3>
+                <input type="number" class="main_stat">
+            </div>
+            <div id="sec_stat">
+                <h3>Secondary Stat: </h3><h3 id="sec" class="type"></h3>
+                <input type="number" class="sec_stat">
+            </div>
+            <div id="third_stat">
+                <h3>Third Stat: </h3><h3 id="third"></h3>
+                <input type="number" class="third_stat">
+            </div>
+            <div id="attack">
+                <h3 id="att_type">Attack</h3>
+                <input type="number" class="attack">
+            </div>
+            <div id="all_stats">
+                <h3 id="all">All Stat(%)</h3>
+                <input type="number" class="all_stats">
+            </div>
+        </div>
+    </div>
+    <div class="right">
+        <div id="output">
+            <h3>Flame Score</h3>
+            <h2 class="total">0</h2>
+        </div>
+    </div>
+
+    <!--Scripts-->
+    <script src="MFC_controls.js"></script>
+</body>
+</html>

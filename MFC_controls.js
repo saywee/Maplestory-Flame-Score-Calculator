@@ -24,16 +24,18 @@ allJobs.sort().forEach(job => {
  * function to get the data of the selected option
  * 
  * selectedJob to store selected option
+ * 
+ * line 35 is a bug
  */
 
 let selectedJob = ""
 
 function selected(){
     let jobOptions = document.getElementById("jobs")
-    selectedJob = jobOptions.options[jobOptions.selectedIndex].value
+    selectedJob = jobOptions.value
     determineStat(selectedJob)
-    unhide(selectedJob);
-    getStat()
+    thirdStatVisibility(selectedJob);
+    checkAtt()
     window.localStorage.setItem("job", selectedJob)
 }
 
@@ -44,6 +46,7 @@ function selected(){
 let mStat = document.getElementById("main");
 let sStat = document.getElementById("sec");
 
+console.log(selectedJob)
 
 function determineStat(j){
     switch(j){
@@ -122,11 +125,11 @@ function determineStat(j){
 }
 
 /**
- * A function that hides the third stat input based on
+ * A function that either hides or shows the third stat input based on
  * selected job
  * @param {*} j the selected job 
  */
-function unhide(j){
+function thirdStatVisibility(j){
     let third = document.getElementById("third_stat");
     if(j === "Cadena" || j === "Dual Blade" || j === "Shadower" || j === "Xenon"){
         if(third.style.display === "none"){
@@ -137,17 +140,13 @@ function unhide(j){
     }
 }
 
-function getStat(){
-    let stat = document.getElementById("main").textContent;
-    checkAtt(stat);
-}
-
 /**
  * A function that determines the attack type base on
  * the type of main stat extracted.
  * @param {*} stat type of main stat
  */
-function checkAtt(stat){
+function checkAtt(){
+    let stat = document.getElementById("main").textContent;
     let attack = document.getElementById("att_type");
     switch(stat){
         case "STR":
@@ -184,13 +183,17 @@ let att = document.querySelector(".attack")
 let allStat = document.querySelector(".all_stats")
 let total = document.querySelector(".total")
 
-
 let mainScore = 0
 let secScore = 0
 let thirdScore = 0
 let attScore = 0
 let allStatScore = 0
 let totalScore = 0
+
+if(isNaN(total.value) || total.value === "undefined"){
+    total.value = 0
+    total.innerHTML = 0
+}
 
  retrieveStorageItems()
 
@@ -215,8 +218,15 @@ mainStat.addEventListener("keyup", function(e){
  */
 secStat.addEventListener("keyup", function(){
     const multiplier = 1/8
-    let val = secStat.value * multiplier
-    secScore = round(val, 1)
+    const xenonMultiplier = 1
+    if(selectedJob !=="Xenon"){
+        let val = secStat.value * multiplier
+        secScore = round(val, 1)
+    }else{
+        let val = secStat.value * xenonMultiplier
+        secScore = round(val, 1)
+    }
+    
     calculate()
     console.log(secScore + " sec score")
 
@@ -230,8 +240,15 @@ secStat.addEventListener("keyup", function(){
  */
 thirdStat.addEventListener("keyup", function(){
     const multiplier = 1/8
-    let val = thirdStat.value * multiplier
-    thirdScore = round(val, 1)
+    const xenonMultiplier = 1
+    if(selectedJob !== "Xenon"){
+        let val = thirdStat.value * multiplier
+        thirdScore = round(val, 1)
+    }else{
+        let val = thirdStat.value * xenonMultiplier
+        thirdScore = round(val, 1)
+    }
+    
     calculate()
     console.log(thirdScore + " third score")
 
@@ -260,8 +277,14 @@ att.addEventListener("keyup", function(){
  */
 allStat.addEventListener("keyup", function(){
     const multiplier = 8.5
-    let val = allStat.value * multiplier
-    allStatScore = val
+    const xenonMultiplier = 15
+    if(selectedJob !== "Xenon"){
+        let val = allStat.value * multiplier
+        allStatScore = val
+    }else{
+        let val = allStat.value * xenonMultiplier
+        allStatScore = val
+    }
     calculate()
     console.log(allStatScore +  " all stat score")
 
@@ -282,28 +305,33 @@ function calculate(){
  * from local storage.
  */
 function retrieveStorageItems(){
-    let jobselected = document.getElementById("jobs")
-    mainStat.value = window.localStorage.getItem("mainScore")
-    secStat.value = window.localStorage.getItem("secScore")
-    thirdStat.value = window.localStorage.getItem("thirdScore")
-    att.value = window.localStorage.getItem("attScore")
-    jobselected.value = window.localStorage.getItem("job")
-    allStat.value = window.localStorage.getItem("allStat")
+    if(window.localStorage.length !== 0){
+        let jobselected = document.getElementById("jobs")
+        mainStat.value = window.localStorage.getItem("mainScore")
+        secStat.value = window.localStorage.getItem("secScore")
+        thirdStat.value = window.localStorage.getItem("thirdScore")
+        att.value = window.localStorage.getItem("attScore")
+        jobselected.value = window.localStorage.getItem("job")
+        allStat.value = window.localStorage.getItem("allStat")
 
-    selected()
+        selected()
     
-    mainScore = parseInt(mainStat.value) * 1
-    secScore = parseInt(secStat.value) * (1/8)
-    if(jobselected.value == "Cadena" || jobselected.value == "Shadower" || jobselected.value == "Dual Blade"){
-        thirdScore = parseInt(thirdStat.value) * (1/8)
+        mainScore = parseInt(mainStat.value) * 1
+        secScore = parseInt(secStat.value) * (1/8)
+        if(jobselected.value == "Cadena" || jobselected.value == "Shadower" || jobselected.value == "Dual Blade"){
+            thirdScore = parseInt(thirdStat.value) * (1/8)
+        }
+        attScore = parseInt(att.value) * 4
+        allStatScore = parseInt(allStat.value) * 8.5
+
+        calculate()   
     }
-    attScore = parseInt(att.value) * 4
-    allStatScore = parseInt(allStat.value) * 8.5
-
-    calculate()
-
     
 }
+
+/**
+ * if output is NaN, change it to 0
+ */
 
 
 
